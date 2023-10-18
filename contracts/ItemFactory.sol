@@ -2,6 +2,8 @@
 pragma solidity ^0.8.20;
 
 import "./Item.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract ItemFactory {
     /**
@@ -26,6 +28,7 @@ contract ItemFactory {
     }
 
     mapping(uint256 => ItemOnMarketplace) public itemNumToItem;
+    mapping(address => address[]) public creatorToItemAddresses;
 
     event ItemCreated(string indexed name, string indexed  uri, uint256 indexed totalSupply);
     event ItemSold(uint256 indexed itemNum, uint256 tokenId, address indexed tokenAddress);
@@ -67,6 +70,7 @@ contract ItemFactory {
             tokenName: name_
         });
 
+        creatorToItemAddresses[msg.sender].push(address(item));
         itemNumToItem[newItemNum] = tmp;
 
         emit ItemCreated(name_, tokenURI_, totalSupply_);
@@ -125,5 +129,32 @@ contract ItemFactory {
             itemStruct.price = MAX_INT;
         }
         emit ItemSold(itemNum_, tokenId_, itemStruct.itemAddress);
+    }
+
+    function getCreatorItems(address creator_) public view returns (string[] memory) {
+        address[] memory itemAddresses = creatorToItemAddresses[creator_];
+        uint256 itemAddressesLength = itemAddresses.length;
+        string[] memory itemMetadata = new string[](itemAddressesLength);
+
+        for(uint256 i = 0; i < itemAddressesLength; i++) {
+            Item _item = Item(itemAddresses[i]);
+            // Total number of items will have same uri hence 1.
+            string memory ipfsCid = _item.tokenURI(1);
+            string memory name = _item.name();
+            string memory json = Base64.encode(
+                bytes(
+                    string(
+                        abi.encodePacked(
+                            '{"name": ', '"', name, '"' ', '
+                            '"cid": ', '"', ipfsCid,
+                            '"}'
+                        )
+                    )
+                )
+            );
+            itemMetadata[i] = string(abi.encodePacked(json));
+        }
+
+        return itemMetadata;
     }
 }

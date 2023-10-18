@@ -9,14 +9,6 @@ import dotenv from 'dotenv';
 
 dotenv.config(); // Load environment variables from .env file
 
-function getRemappings() {
-  return fs
-    .readFileSync("remappings.txt", "utf8")
-    .split("\n")
-    .filter(Boolean)
-    .map((line) => line.trim().split("="));
-}
-
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
   solidity: {
@@ -31,9 +23,8 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       forking: {
-        url: `https://mainnet.infura.io/v3/${
-          process.env.API_KEY ? process.env.API_KEY : ''
-        }`,
+        url: `https://mainnet.infura.io/v3/${process.env.API_KEY ? process.env.API_KEY : ''
+          }`,
         blockNumber: 14390000,
       },
       accounts: {
@@ -41,17 +32,8 @@ const config: HardhatUserConfig = {
       },
     },
     sepolia: {
-      url: `https://sepolia.infura.io/v3/${
-        process.env.API_KEY ? process.env.API_KEY : ''
-      }`, // Replace with the actual URL of the sepoli network
-      accounts: process.env.DEPLOYMENT_PRIVATE_KEY
-        ? [process.env.DEPLOYMENT_PRIVATE_KEY]
-        : [],
-    },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${
-        process.env.API_KEY ? process.env.API_KEY : ''
-      }`, // Replace with the actual URL of the goerli network
+      url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.SEPOLIA_API_KEY ? process.env.SEPOLIA_API_KEY : ''
+        }`, // Replace with the actual URL of the sepoli network
       accounts: process.env.DEPLOYMENT_PRIVATE_KEY
         ? [process.env.DEPLOYMENT_PRIVATE_KEY]
         : [],
@@ -62,8 +44,14 @@ const config: HardhatUserConfig = {
         ? [process.env.DEPLOYMENT_PRIVATE_KEY]
         : [],
     },
-    polygon: {
-      url: 'https://rpc-mainnet.maticvigil.com',
+    optimismGoerli: {
+      url: `https://opt-goerli.g.alchemy.com/v2/${process.env.API_KEY ? process.env.API_KEY : ''}`,
+      accounts: process.env.DEPLOYMENT_PRIVATE_KEY
+        ? [process.env.DEPLOYMENT_PRIVATE_KEY]
+        : [],
+    },
+    scrollTestnet: {
+      url: 'https://sepolia-rpc.scroll.io/',
       accounts: process.env.DEPLOYMENT_PRIVATE_KEY
         ? [process.env.DEPLOYMENT_PRIVATE_KEY]
         : [],
@@ -80,7 +68,20 @@ const config: HardhatUserConfig = {
       polygon: process.env.POLYGONSCAN_API_KEY
         ? process.env.POLYGONSCAN_API_KEY
         : '',
+      scrollSepolia: process.env.SCROLLSCAN_API_KEY
+        ? process.env.SCROLLSCAN_API_KEY
+        : '',
     },
+    customChains: [
+      {
+        network: 'scrollSepolia',
+        chainId: 534351,
+        urls: {
+          apiURL: 'https://sepolia-blockscout.scroll.io/api',
+          browserURL: 'https://sepolia-blockscout.scroll.io/',
+        },
+      },
+    ],
   },
   // preprocess: {
   //   eachLine: (hre) => ({
@@ -94,7 +95,7 @@ const config: HardhatUserConfig = {
   //       }
   //       return line;
   //     },
-    // }),
+  // }),
   // },
 };
 

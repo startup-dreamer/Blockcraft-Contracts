@@ -96,7 +96,7 @@ contract WorldNFT is ERC721, ERC721URIStorage {
 
     function updateTokenURI(address user_, uint256 worldId_, string memory tokenURI_) public isWorldOwner(worldId_) isUserTokenExists(user_, worldId_) {
         super._setTokenURI(worldId_, tokenURI_);
-        
+
         emit UpdatedWorldURI(user_, worldId_, tokenURI_);
     }
 
