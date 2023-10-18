@@ -44,8 +44,6 @@ contract HelloWormholeProtections is Base, IWormholeReceiver {
         replayProtect(deliveryHash)
     {
         (bytes memory data, address sender) = abi.decode(payload, (string, address));
-        latestGreeting = greeting;
-
 
     }
 }
