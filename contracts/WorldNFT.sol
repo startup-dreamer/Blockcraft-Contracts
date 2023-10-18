@@ -75,9 +75,9 @@ contract WorldNFT is ERC721, ERC721URIStorage {
                 bytes(
                     string(
                         abi.encodePacked(
-                            '{"name": ', name, ', '
-                            '"description": ', description, ', '
-                            '"cid": ', ipfsCid,
+                            '{"name": ', '"', name, '"' ', '
+                            '"description": ', '"',  description, '"' ', '
+                            '"cid": ', '"', ipfsCid,
                             '"}'
                         )
                     )
