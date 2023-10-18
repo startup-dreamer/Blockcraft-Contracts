@@ -1,19 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "./item.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "./Item.sol";
 
 contract ItemFactory {
-    using Counters for Counters.Counter;
-
     /**
      * ========================================================= *
      *                   Storage Declarations                    *
      * ========================================================= *
      */
 
-    Counters.Counter public _totalItems;
+    uint256 public _totalItems;
 
     uint256 private constant MAX_INT = 2**256 - 1;
 
@@ -53,8 +50,8 @@ contract ItemFactory {
         string memory symbol_,
         string memory tokenURI_
     ) public returns (uint256) {
-        _totalItems.increment();
-        uint256 newItemNum = _totalItems.current();
+        _totalItems += 1;
+        uint256 newItemNum = _totalItems;
 
         Item item = new Item(name_, symbol_, address(this));
         item.batchMint(address(this), totalSupply_, tokenURI_);

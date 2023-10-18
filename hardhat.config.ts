@@ -1,21 +1,32 @@
-import { HardhatUserConfig } from "hardhat/config";
+import fs from "fs";
+import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-foundry";
+import "@typechain/hardhat";
+import "hardhat-preprocessor";
 import dotenv from 'dotenv';
 
+
 dotenv.config(); // Load environment variables from .env file
+
+function getRemappings() {
+  return fs
+    .readFileSync("remappings.txt", "utf8")
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => line.trim().split("="));
+}
 
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
   solidity: {
-    version: '0.8.0', // Replace with the desired Solidity version
+    version: '0.8.20', // Replace with the desired Solidity version
     settings: {
       optimizer: {
         enabled: true,
         runs: 200,
       },
     },
-    gasPrice: 0,
   },
   networks: {
     hardhat: {
@@ -71,7 +82,20 @@ const config: HardhatUserConfig = {
         : '',
     },
   },
-
+  preprocess: {
+    eachLine: (hre) => ({
+      transform: (line: string) => {
+        if (line.match(/^\s*import /i)) {
+          getRemappings().forEach(([find, replace]) => {
+            if (line.match(find)) {
+              line = line.replace(find, replace);
+            }
+          });
+        }
+        return line;
+      },
+    }),
+  },
 };
 
 export default config;
