@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract ItemFactory {
+    using Strings for string;
     /**
      * ========================================================= *
      *                   Storage Declarations                    *
@@ -23,8 +24,8 @@ contract ItemFactory {
         uint256 totalSold;
         address itemAddress;
         address creator;
-        string tokenURI;
-        string tokenName;
+        string itemURI;
+        string itemName;
     }
 
     mapping(uint256 => ItemOnMarketplace) public itemNumToItem;
@@ -32,6 +33,17 @@ contract ItemFactory {
 
     event ItemCreated(string indexed name, string indexed  uri, uint256 indexed totalSupply);
     event ItemSold(uint256 indexed itemNum, uint256 tokenId, address indexed tokenAddress);
+
+    modifier isItemExists(string memory name_, string memory itemURI_) {
+        for(uint256 i = 1; i <= _totalItems; ) {
+            require(!name_.equal(itemNumToItem[i].itemName), "Item exists");
+            require(!itemURI_.equal(itemNumToItem[i].itemURI), "Item exists");
+            unchecked {
+                ++i;
+            }
+        }
+        _;
+    }
 
     /**
      * ========================================================= *
@@ -44,20 +56,20 @@ contract ItemFactory {
      * @param totalSupply_ The total supply of the item
      * @param name_ The name of the item
      * @param symbol_ The symbol of the item
-     * @param tokenURI_ The tokenURI of the item
+     * @param itemURI_ The itemURI of the item
      * @return The token number of the newly created item
      */
     function newItem(
         uint256 totalSupply_,
         string memory name_,
         string memory symbol_,
-        string memory tokenURI_
-    ) public returns (uint256) {
+        string memory itemURI_
+    ) public isItemExists(name_, itemURI_) returns (uint256) {
         _totalItems += 1;
         uint256 newItemNum = _totalItems;
 
         Item item = new Item(name_, symbol_, address(this));
-        item.batchMint(address(this), totalSupply_, tokenURI_);
+        item.batchMint(address(this), totalSupply_, itemURI_);
 
         ItemOnMarketplace memory tmp = ItemOnMarketplace({
             listing: false,
@@ -66,14 +78,14 @@ contract ItemFactory {
             totalSold: 0,
             creator: msg.sender,
             itemAddress: address(item),
-            tokenURI: tokenURI_,
-            tokenName: name_
+            itemURI: itemURI_,
+            itemName: name_
         });
 
         creatorToItemAddresses[msg.sender].push(address(item));
         itemNumToItem[newItemNum] = tmp;
 
-        emit ItemCreated(name_, tokenURI_, totalSupply_);
+        emit ItemCreated(name_, itemURI_, totalSupply_);
         return newItemNum;
     }
 
@@ -131,8 +143,8 @@ contract ItemFactory {
         emit ItemSold(itemNum_, tokenId_, itemStruct.itemAddress);
     }
 
-    function getCreatorItems(address creator_) public view returns (string[] memory) {
-        address[] memory itemAddresses = creatorToItemAddresses[creator_];
+    function fetchMetadata(address user_) public view returns (string[] memory) {
+        address[] memory itemAddresses = creatorToItemAddresses[user_];
         uint256 itemAddressesLength = itemAddresses.length;
         string[] memory itemMetadata = new string[](itemAddressesLength);
 
@@ -154,7 +166,6 @@ contract ItemFactory {
             );
             itemMetadata[i] = string(abi.encodePacked(json));
         }
-
         return itemMetadata;
     }
 }
