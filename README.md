@@ -1,4 +1,19 @@
-# Contract Module for Blockcraft ETH Online 2023 Project
+# Contract Module for Blockcraft ETH Online 2023
+
+## Verification
+### Scroll-Sepolia
+- WorldNFT [link]()
+- ItemFactory [link]()
+### Cross Chain Deployments
+- **Polygon Mumbai**
+    - ItemFactory-Operator [link]()
+    - WorldNFT-Operator [link]()
+- **Optimism Goerli**
+    - ItemFactory-Operator [link]()
+    - WorldNFT-Operator [link]()
+- **Ethereum Sepolia**
+    - ItemFactory-Operator [link]()
+    - WorldNFT-Operator [link]()
 
 ## contracts 
  - Core contracts are in [contracts]('./contracts)
