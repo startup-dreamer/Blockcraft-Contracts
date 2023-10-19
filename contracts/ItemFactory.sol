@@ -7,35 +7,37 @@ import "@openzeppelin/contracts/utils/Base64.sol";
 
 contract ItemFactory {
     using Strings for string;
+
     /**
      * ========================================================= *
      *                   Storage Declarations                    *
      * ========================================================= *
      */
 
-    uint256 public _totalItems;
+    uint256 public _totalItems; // Total number of items created
 
-    uint256 private constant MAX_INT = 2**256 - 1;
+    uint256 private constant MAX_INT = 2 ** 256 - 1; // Maximum possible value for uint256
 
     struct ItemOnMarketplace {
-        bool listing;
-        uint256 price;
-        uint256 totalSupply;
-        uint256 totalSold;
-        address itemAddress;
-        address creator;
-        string itemURI;
-        string itemName;
+        bool listing; // Indicates if the item is listed on the marketplace
+        uint256 price; // Price of the item
+        uint256 totalSupply; // Total supply of the item
+        uint256 totalSold; // Total items sold
+        address itemAddress; // Address of the item contract
+        address creator; // Address of the creator
+        string itemURI; // URI of the item
+        string itemName; // Name of the item
     }
 
-    mapping(uint256 => ItemOnMarketplace) public itemNumToItem;
-    mapping(address => address[]) public creatorToItemAddresses;
+    mapping(uint256 => ItemOnMarketplace) public itemNumToItem; // Mapping of item number to item details
+    mapping(address => address[]) public creatorToItemAddresses; // Mapping of creator address to their item addresses
 
-    event ItemCreated(string indexed name, string indexed  uri, uint256 indexed totalSupply);
-    event ItemSold(uint256 indexed itemNum, uint256 tokenId, address indexed tokenAddress);
+    event ItemCreated(string indexed name, string indexed uri, uint256 indexed totalSupply); // Event emitted when an item is created
+    event ItemSold(uint256 indexed itemNum, uint256 tokenId, address indexed tokenAddress); // Event emitted when an item is sold
 
     modifier isItemExists(string memory name_, string memory itemURI_) {
-        for(uint256 i = 1; i <= _totalItems; ) {
+        // Check if an item with the same name or URI already exists
+        for (uint256 i = 1; i <= _totalItems;) {
             require(!name_.equal(itemNumToItem[i].itemName), "Item exists");
             require(!itemURI_.equal(itemNumToItem[i].itemURI), "Item exists");
             unchecked {
@@ -59,12 +61,11 @@ contract ItemFactory {
      * @param itemURI_ The itemURI of the item
      * @return The token number of the newly created item
      */
-    function newItem(
-        uint256 totalSupply_,
-        string memory name_,
-        string memory symbol_,
-        string memory itemURI_
-    ) public isItemExists(name_, itemURI_) returns (uint256) {
+    function newItem(uint256 totalSupply_, string memory name_, string memory symbol_, string memory itemURI_)
+        public
+        isItemExists(name_, itemURI_)
+        returns (uint256)
+    {
         _totalItems += 1;
         uint256 newItemNum = _totalItems;
 
@@ -96,10 +97,7 @@ contract ItemFactory {
      */
     function listOnMarketplace(uint256 itemNum_, uint256 price_) public {
         ItemOnMarketplace storage itemStruct = itemNumToItem[itemNum_];
-        require(
-            itemStruct.creator == msg.sender,
-            "Only owner can list the token on marketplace"
-        );
+        require(itemStruct.creator == msg.sender, "Only owner can list the token on marketplace");
         itemStruct.listing = true;
         itemStruct.price = price_;
     }
@@ -110,19 +108,16 @@ contract ItemFactory {
      */
     function removeFromMarketplace(uint256 itemNum_) public {
         ItemOnMarketplace storage itemStruct = itemNumToItem[itemNum_];
-        require(
-            itemStruct.creator == msg.sender,
-            "Only owner can remove the token from marketplace"
-        );
+        require(itemStruct.creator == msg.sender, "Only owner can remove the token from marketplace");
         itemStruct.listing = false;
         itemStruct.price = MAX_INT;
     }
 
-    /** 
+    /**
      * @dev Purchase the item from marketplace
      * @param itemNum_ The token number of the item
      */
-    function purchase(uint256 itemNum_) public payable {
+    function purchaseItem(uint256 itemNum_) public payable {
         ItemOnMarketplace storage itemStruct = itemNumToItem[itemNum_];
         require(itemStruct.listing, "The token is not listed");
         require(msg.value == itemStruct.price, "The price is not correct");
@@ -135,34 +130,31 @@ contract ItemFactory {
         // Update marketplace to remove the listing
         itemStruct.totalSold += 1;
 
-        // handeling the case when all tokens are sold.
-        if(itemStruct.totalSold == itemStruct.totalSupply) {
+        // Handling the case when all tokens are sold.
+        if (itemStruct.totalSold == itemStruct.totalSupply) {
             itemStruct.listing = false;
             itemStruct.price = MAX_INT;
         }
         emit ItemSold(itemNum_, tokenId_, itemStruct.itemAddress);
     }
 
+    /**
+     * @dev Fetches metadata for items created by a specific user
+     * @param user_ The address of the user/creator
+     * @return An array of JSON strings representing the metadata of the items
+     */
     function fetchMetadata(address user_) public view returns (string[] memory) {
         address[] memory itemAddresses = creatorToItemAddresses[user_];
         uint256 itemAddressesLength = itemAddresses.length;
         string[] memory itemMetadata = new string[](itemAddressesLength);
 
-        for(uint256 i = 0; i < itemAddressesLength; i++) {
+        for (uint256 i = 0; i < itemAddressesLength; i++) {
             Item _item = Item(itemAddresses[i]);
             // Total number of items will have same uri hence 1.
             string memory ipfsCid = _item.tokenURI(1);
             string memory name = _item.name();
             string memory json = Base64.encode(
-                bytes(
-                    string(
-                        abi.encodePacked(
-                            '{"name": ', '"', name, '"' ', '
-                            '"cid": ', '"', ipfsCid,
-                            '"}'
-                        )
-                    )
-                )
+                bytes(string(abi.encodePacked('{"name": ', '"', name, '"' ", " '"cid": ', '"', ipfsCid, '"}')))
             );
             itemMetadata[i] = string(abi.encodePacked(json));
         }

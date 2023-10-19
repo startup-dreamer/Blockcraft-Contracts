@@ -41,6 +41,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@scroll-tech/contracts": "^0.1.0",
     "dotenv": "^16.3.1",
     "moralis": "^2.23.1"
   }
