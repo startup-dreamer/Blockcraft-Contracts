@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
-import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+import "@scroll-tech/contracts/libraries/IScrollMessenger.sol";
 
 contract ItemFactoryOperator {
     // Immutable addresses for Item Factory and Scroll Messenger contracts

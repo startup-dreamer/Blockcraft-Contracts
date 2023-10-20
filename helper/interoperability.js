@@ -8,7 +8,7 @@ const SENDER_ABI = reciver.abi;
 const RECEIVER_ABI = sender.abi;
 
 async function main() {
-    const privateKey = '695443873d058db7e263d01779d068b2fdb1863556ad7d14c953de97dbe35119'; // replace with your private key
+    const privateKey = ''; // replace with your private key
     const scroll_provider = new ethers.providers.JsonRpcProvider('https://sepolia-rpc.scroll.io/');
     const scroll_signer = new ethers.Wallet(privateKey, scroll_provider);
     const receiver_contract = new ethers.Contract(RECEIVER_ADDRESS, RECEIVER_ABI, scroll_signer);

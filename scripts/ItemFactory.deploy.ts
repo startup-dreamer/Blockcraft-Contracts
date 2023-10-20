@@ -1,22 +1,22 @@
-import { ethers } from "hardhat";
-import { verifyContract, VerifyContractParams } from "../utils/verify";
+import { ethers, run } from "hardhat";
 
 async function main() {
     // Set up the contract factory and signer
-    const WorldNFT = await ethers.deployContract("ItemFactory");
+    const ItemFactory = await ethers.deployContract("ItemFactory");
 
     // Deploy the contract
-    await WorldNFT.waitForDeployment();
+    await ItemFactory.waitForDeployment();
+    const contractAddress = ItemFactory.target;
 
-    const verifyPera: VerifyContractParams = {
-        contractAddress: WorldNFT.target.toString(),
-        args: [name, symbol],
-        contractPath: "../contracts/WorldNFT.sol:WorldNFT",
-    };
+    console.log("WorldNFT deployed to:", contractAddress);
 
-    verifyContract(verifyPera);
+    setTimeout(async () => {}, 30000);
 
-    console.log("WorldNFT deployed to:", WorldNFT.target);
+    await run("verify:verify", {
+        address: contractAddress,
+        constructorArguments: [],
+        contract: 'contracts/ItemFactory.sol:ItemFactory',
+      });
 }
 
 main().catch((error) => {

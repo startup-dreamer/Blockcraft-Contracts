@@ -1,12 +1,14 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import { expect } from "chai";
+import { ethers } from "hardhat";
+import type { SignerWithAddress } from "hardhat-deploy-ethers/dist/src/signer-with-address";
+import type { WorldNFT } from "../typechain";
 
 describe("WorldNFT", function () {
-  let WorldNFT;
-  let worldNFT;
-  let owner;
-  let addr1;
-  let addr2;
+  let WorldNFT: WorldNFT;
+  let worldNFT: WorldNFT;
+  let owner: SignerWithAddress;
+  let addr1: SignerWithAddress;
+  let addr2: SignerWithAddress;
 
   beforeEach(async function () {
     [owner, addr1, addr2] = await ethers.getSigners();

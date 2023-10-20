@@ -50,7 +50,7 @@ const config: HardhatUserConfig = {
         ? [process.env.DEPLOYMENT_PRIVATE_KEY]
         : [],
     },
-    scrollTestnet: {
+    scrollSepolia: {
       url: 'https://sepolia-rpc.scroll.io/',
       accounts: process.env.DEPLOYMENT_PRIVATE_KEY
         ? [process.env.DEPLOYMENT_PRIVATE_KEY]

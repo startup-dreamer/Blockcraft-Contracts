@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
-import "@scroll-tech/contracts@0.1.0/libraries/IScrollMessenger.sol";
+import "@scroll-tech/contracts/libraries/IScrollMessenger.sol";
 
 // The WorldNFTOperator is a contract capable of executing functions on the WorldNFT contract through the bridge
 contract WorldNFTOperator {
