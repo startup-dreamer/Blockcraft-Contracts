@@ -8,18 +8,10 @@
 - **Ethereum Sepolia**
     - ItemFactory-Operator [link]()
     - WorldNFT-Operator [link]()
-### Wormhole Cross Chain Deplotments
-- **Polygon Mumbai**
-    - ItemFactory-Operator [link]()
-    - WorldNFT-Operator [link]()
-- **Optimism Goerli**
-    - ItemFactory-Operator [link]()
-    - WorldNFT-Operator [link]()
 
 ## contracts 
  - Core contracts are in [contracts](contracts)
  - Scroll Cross chain module operator [constracts/Scroll-CrossChain](constracts/Scroll-CrossChain)
- - Wormhole sender and reciever [constracts/Wormhole-Contracts](contracts/Wormhole-Contracts)
 
 ## Deployments
 - [Scripts](scripts)
