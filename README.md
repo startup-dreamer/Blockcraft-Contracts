@@ -6,8 +6,8 @@
 - ItemFactory [link](https://sepolia.scrollscan.dev/address/0x0C769dd6d69DabD6a4151B579A42E49A54074d62#code)
 ### Scroll Cross Chain Deployments
 - **Ethereum Sepolia**
-    - ItemFactory-Operator [link]()
-    - WorldNFT-Operator [link]()
+    - ItemFactory-Operator [link](https://sepolia.etherscan.io/address/0x62A9AA8Eae2BCEBc42b93b73e977AC748EA81e66#code)
+    - WorldNFT-Operator [link](https://sepolia.etherscan.io/address/0x4302bFe57631edF12F1969f773B1F0e68348bAc5#code)
 
 ## contracts 
  - Core contracts are in [contracts](contracts)
