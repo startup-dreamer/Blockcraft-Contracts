@@ -22,6 +22,7 @@
 ## Helper Scripts
 - [helper](helper)
 
+### Backend repo [link](https://github.com/startup-dreamer/backend), Frontend repo [link](https://github.com/startup-dreamer/Blockcraft-Frontend)
 
 ## Hardhat Commands
 ```shell
