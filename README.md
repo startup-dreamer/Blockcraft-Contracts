@@ -4,6 +4,9 @@
 ### Scroll-Sepolia
 - WorldNFT [link](https://sepolia.scrollscan.dev/address/0x304Ad60027Bc6A8128E4AE1dE862E86B6cc37154#code)
 - ItemFactory [link](https://sepolia.scrollscan.dev/address/0x0C769dd6d69DabD6a4151B579A42E49A54074d62#code)
+### BlockScout verification
+- WorldNFT [link](https://sepolia-blockscout.scroll.io/address/0x304Ad60027Bc6A8128E4AE1dE862E86B6cc37154/contracts#address-tabs)
+- ItemFactory [link](https://sepolia-blockscout.scroll.io/address/0x0C769dd6d69DabD6a4151B579A42E49A54074d62/contracts#address-tabs)
 ### Scroll Cross Chain Deployments
 - **Ethereum Sepolia**
     - ItemFactory-Operator [link](https://sepolia.etherscan.io/address/0x62A9AA8Eae2BCEBc42b93b73e977AC748EA81e66#code)
